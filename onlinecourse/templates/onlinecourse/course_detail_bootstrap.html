@@ -48,12 +48,27 @@
                         <div class="card-header"><h5>Lesson {{lesson.order|add:1}}: {{lesson.title}}</h5></div>
                         <div class="card-body">{{lesson.content}}</div>
                     </div>
+                    <div id="exam" >
+                        test
+                    {% for question in lesson.question_set.all %}
+                        <div class="card mt-1">
+                            <div class="card-header"><h5>{{question.question_text}}</h5></div>
+                            <div class="card-body">
+                                {% for choice in question.choice_set.all %}
+                                    <input type="checkbox" name="choice_{{choice.id}}" id="{{choice.id}}">
+                                    <label for="choice_{{choice.id}}">{{choice.choice_text}}</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    </div>
                 {% endfor %}
             </div>
             <!-- Task: show questions and choices -->
             <!-- <HINT> Use Bootstrap Collapse to hide exam first, more details could be found here
             https://www.w3schools.com/bootstrap4/bootstrap_collapse.asp-->
-
+            
             <!--
 
             A collapse example here:

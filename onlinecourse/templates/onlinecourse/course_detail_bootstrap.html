@@ -48,21 +48,6 @@
                         <div class="card-header"><h5>Lesson {{lesson.order|add:1}}: {{lesson.title}}</h5></div>
                         <div class="card-body">{{lesson.content}}</div>
                     </div>
-                    <div id="exam" >
-                        test
-                    {% for question in lesson.question_set.all %}
-                        <div class="card mt-1">
-                            <div class="card-header"><h5>{{question.question_text}}</h5></div>
-                            <div class="card-body">
-                                {% for choice in question.choice_set.all %}
-                                    <input type="checkbox" name="choice_{{choice.id}}" id="{{choice.id}}">
-                                    <label for="choice_{{choice.id}}">{{choice.choice_text}}</label>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endfor %}
-
-                    </div>
                 {% endfor %}
             </div>
             <!-- Task: show questions and choices -->
@@ -89,15 +74,16 @@
             <!-- <HINT> For each question choice, you may create a checkbox input like
             <input type="check" name="choice_{{choice.id}}" id="{{choice.id}}" ...>
             -->
-
-            <!-- A choice submission form example
-            <form id="questionform" action="point to a submit view" method="post">
-                        ... for each question in the course ...
+        {% if user.is_authenticated %}
+        <button data-toggle="collapse" data-target="#exam" class="btn btn-primary btn-block">Start Exam</button>
+        <div id="exam" class="collapse">
+            <form id="questionform" action="{% url 'onlinecourse:submit' course.id%}" method="post">
+                    {% for question in course.question_set.all %}
                         <div class="card mt-1">
                             <div class="card-header"><h5>{{ question.question_text}}</h5></div>
                             {% csrf_token %}
                             <div class="form-group">
-                               ... for each choice in the question ...
+                               {% for choice in question.choice_set.all %}
                                 <div class="form-check">
                                     <label class="form-check-label">
                                         <input type="checkbox" name="choice_{{choice.id}}"
@@ -105,11 +91,14 @@
                                                value="{{choice.id}}">{{ choice.choice_text }}
                                     </label>
                                 </div>
+                                {% endfor %}
                             </div>
                         </div>
+                    {% endfor %}
                     <input class="btn btn-success btn-block" type="submit" value="Submit">
-            </form> -->
-
+            </form> 
+        </div>
+        {% endif %}
             <!--Check here to see more details Bootstrap checkbox
              https://www.w3schools.com/bootstrap4/bootstrap_forms_inputs.asp-->
     </div>
